@@ -4,6 +4,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 
 import okhttp3.Call;
@@ -14,12 +16,14 @@ import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
+    private JSONObject test;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        run("http://livescore-api.com/api-client/scores/history.json?key=yEcqTDm6UkJ51IqJ&secret=zVPESkhMLdIJENucrGCljZrekbjmTK5t");
     }
-/*
+
     private void run(String url) {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
@@ -42,10 +46,9 @@ public class MainActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        texte.setText(body);
                     }
                 });
             }
         });
-    }*/
+    }
 }
