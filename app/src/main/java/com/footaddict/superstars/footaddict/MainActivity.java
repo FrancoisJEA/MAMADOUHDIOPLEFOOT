@@ -1,11 +1,10 @@
 package com.footaddict.superstars.footaddict;
 
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-
-import com.facebook.stetho.okhttp3.StethoInterceptor;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -29,10 +28,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         run("http://livescore-api.com/api-client/leagues/list.json?key=yEcqTDm6UkJ51IqJ&secret=zVPESkhMLdIJENucrGCljZrekbjmTK5t");
+        playSound(this, R.raw.uefa);
+    }
+
+    private static void playSound(Context context, int soundID){
+        MediaPlayer mp = MediaPlayer.create(context, soundID);
+        mp.start();
     }
 
     private void run(String url) {
-        OkHttpClient client = new MyApplication().getClient();
+        OkHttpClient client = MyApplication.getClient();
 
         // Request for get list of all league
         Request request = new Request.Builder()
