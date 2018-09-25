@@ -17,7 +17,8 @@ public class BDDOpenHelper extends SQLiteOpenHelper
     @Override
     public void onCreate(SQLiteDatabase db)
     {
-        context.getResources().openRawResource(R.raw.sql);
+        context.getResources().openRawResource(R.raw.country);
+
 
 
     }

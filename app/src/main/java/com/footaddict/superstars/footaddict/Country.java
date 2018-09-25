@@ -31,8 +31,7 @@ public class Country
         this.id = id;
         this.name = name;
         this.countrycompetitions = countrycompetitions;
-}
-
+    }
 }
 
 
