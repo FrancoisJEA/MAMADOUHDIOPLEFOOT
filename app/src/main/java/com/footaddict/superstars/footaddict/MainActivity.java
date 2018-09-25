@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.facebook.stetho.okhttp3.StethoInterceptor;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -12,8 +14,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 
 import okhttp3.Call;
@@ -32,11 +32,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void run(String url) {
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient client = new MyApplication().getClient();
 
         // Request for get list of all league
         Request request = new Request.Builder()
-                .url("http://livescore-api.com/api-client/leagues/list.json?key=yEcqTDm6UkJ51IqJ&secret=zVPESkhMLdIJENucrGCljZrekbjmTK5t")
+                .url(url)
                 .build();
 
         //Call http request

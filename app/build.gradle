@@ -27,6 +27,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation group:'com.squareup.okhttp3',name:'okhttp',version:'3.11.0'
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.6'
-    implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.7.2'
     implementation 'com.facebook.stetho:stetho:1.5.0'
+    implementation 'com.facebook.stetho:stetho-okhttp3:1.5.0'
 }
