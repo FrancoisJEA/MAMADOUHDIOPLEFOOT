@@ -6,10 +6,14 @@ import android.os.Bundle;
 import android.util.Log;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 
 import okhttp3.Call;
@@ -24,6 +28,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        run("http://livescore-api.com/api-client/leagues/list.json?key=yEcqTDm6UkJ51IqJ&secret=zVPESkhMLdIJENucrGCljZrekbjmTK5t");
+    }
+
+    private void run(String url) {
         OkHttpClient client = new OkHttpClient();
 
         // Request for get list of all league
@@ -37,12 +45,13 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
                 Log.e("Exception", "Http connection failed ");
             }
+
             public void onResponse(Call call, final Response response) throws IOException {
                 if (!response.isSuccessful()) {
                     throw new IOException("Unexpected code " + response);
                 } else {
-                // do something wih the result
-                    writeToFile(response.body().string(),"Leagues.json");
+                    // do something wih the result
+                    writeToFile(response.body().string(), "Leagues.json");
                     System.out.println(readFromFile("Leagues.json"));
                 }
             }
@@ -51,7 +60,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void writeToFile(String data, String fileName) {
         try {
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(openFileOutput(fileName, Context.MODE_PRIVATE));
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(new FileOutputStream(new File(getCacheDir(), fileName)));
+            openFileOutput(fileName, Context.MODE_PRIVATE);
             outputStreamWriter.write(data);
             outputStreamWriter.close();
         }
@@ -62,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private String readFromFile(String fileName) {
-
         String result = "";
         String receiveString = "";
 
@@ -86,7 +95,6 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             Log.e("login activity", "Can not read file: " + e.toString());
         }
-
         return result;
     }
 }
