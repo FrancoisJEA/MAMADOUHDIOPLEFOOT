@@ -26,4 +26,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation group:'com.squareup.okhttp3',name:'okhttp',version:'3.11.0'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.6'
+
 }
