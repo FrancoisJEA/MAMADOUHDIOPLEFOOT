@@ -32,13 +32,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void run(String url) {
-        OkHttpClient client = new OkHttpClient.Builder()
-                .addNetworkInterceptor(new StethoInterceptor())
-                .build();
+        OkHttpClient client = new MyApplication().getClient();
 
         // Request for get list of all league
         Request request = new Request.Builder()
-                .url("http://livescore-api.com/api-client/leagues/list.json?key=yEcqTDm6UkJ51IqJ&secret=zVPESkhMLdIJENucrGCljZrekbjmTK5t")
+                .url(url)
                 .build();
 
         //Call http request
