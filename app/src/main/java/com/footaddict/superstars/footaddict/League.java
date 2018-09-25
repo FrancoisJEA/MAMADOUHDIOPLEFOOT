@@ -1,7 +1,5 @@
 package com.footaddict.superstars.footaddict;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 public class League {
     private String id;
 
@@ -11,7 +9,6 @@ public class League {
 
     private String name;
 
-    @JsonProperty("id")
     public String getId ()
     {
         return id;
@@ -22,7 +19,6 @@ public class League {
         this.id = id;
     }
 
-    @JsonProperty("scores")
     public String getScores ()
     {
         return scores;
@@ -33,7 +29,6 @@ public class League {
         this.scores = scores;
     }
 
-    @JsonProperty("country_id")
     public String getCountry_id ()
     {
         return country_id;
@@ -44,7 +39,6 @@ public class League {
         this.country_id = country_id;
     }
 
-    @JsonProperty("name")
     public String getName ()
     {
         return name;
