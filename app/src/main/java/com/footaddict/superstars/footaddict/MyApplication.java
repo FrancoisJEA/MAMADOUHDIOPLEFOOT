@@ -9,7 +9,7 @@ import okhttp3.OkHttpClient;
 
 public class MyApplication extends Application {
 
-    public OkHttpClient client;
+    private static OkHttpClient client;
 
     public void onCreate() {
         super.onCreate();
@@ -17,9 +17,10 @@ public class MyApplication extends Application {
         client = new OkHttpClient.Builder()
                 .addNetworkInterceptor(new StethoInterceptor())
                 .build();
+
     }
 
-    public OkHttpClient getClient() {
-        return client;
+    public static OkHttpClient getClient() {
+        return  client;
     }
 }
