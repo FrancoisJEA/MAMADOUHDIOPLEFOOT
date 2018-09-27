@@ -1,7 +1,7 @@
 create table fa.tCountry
 (
 	CountryId int identity(0,1),
-	Name nvarchar not null,
+	CountryName nvarchar not null,
 	Scores nvarchar not null,
 	CountryCompetitions nvarchar not null, 
 
