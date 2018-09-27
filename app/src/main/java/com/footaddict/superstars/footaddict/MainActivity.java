@@ -5,6 +5,7 @@ import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ListView;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -14,6 +15,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -22,13 +26,27 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
-
+    public static int[] images = {R.drawable.splash_screen};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ListView listView = findViewById(R.id.listView);
         run("http://livescore-api.com/api-client/leagues/list.json?key=yEcqTDm6UkJ51IqJ&secret=zVPESkhMLdIJENucrGCljZrekbjmTK5t");
-        playSound(this, R.raw.uefa);
+        //playSound(this, R.raw.uefa);
+
+        // Setup the data source
+        //List<ListLeague> itemsArrayList = ListLeague.getLeague() ; // calls function to get items list
+        League league = new League();
+        league.setName("toto");
+        League league2 = new League();
+        league2.setName("toto2");
+        List<League> leagues = Arrays.asList(league,league2);
+        // instantiate the custom list adapter
+        CustomAdapter adapter = new CustomAdapter(this, leagues);
+
+        // get the ListView and attach the adapter
+        listView.setAdapter(adapter);
     }
 
     private static void playSound(Context context, int soundID){
@@ -57,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     // do something wih the result
                     writeToFile(response.body().string(), "Leagues.json");
-                    System.out.println(readFromFile("Leagues.json"));
+                    Log.i("JSonInCache",readFromFile("Leagues.json"));
                 }
             }
         });
@@ -66,7 +84,6 @@ public class MainActivity extends AppCompatActivity {
     private void writeToFile(String data, String fileName) {
         try {
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(new FileOutputStream(new File(getCacheDir(), fileName)));
-            openFileOutput(fileName, Context.MODE_PRIVATE);
             outputStreamWriter.write(data);
             outputStreamWriter.close();
         }

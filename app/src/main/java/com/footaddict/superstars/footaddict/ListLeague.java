@@ -2,23 +2,25 @@ package com.footaddict.superstars.footaddict;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.List;
+
 public class ListLeague {
-        private League[] league;
+        private static List<League> lleague;
 
         @JsonProperty("league")
-        public League[] getLeague ()
+        public static List<League> getLeague ()
         {
-            return league;
+            return lleague;
         }
 
-        public void setLeague (League[] league)
+        public static void setLeague (List<League> league)
         {
-            this.league = league;
+            lleague = league;
         }
 
         @Override
         public String toString()
         {
-            return "[league = "+league+"]";
+            return "[league = "+lleague+"]";
         }
 }

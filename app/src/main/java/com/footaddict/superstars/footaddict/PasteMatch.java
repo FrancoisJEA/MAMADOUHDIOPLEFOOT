@@ -2,14 +2,14 @@ package com.footaddict.superstars.footaddict;
 
 import java.util.Date;
 
-public class Match
+public class PasteMatch
 {
     private Date startDate;
     private Date endDate;
     private String score;
     private boolean isLive = false;
 
-    public Match(Date startDate,Date endDate)
+    public PasteMatch(Date startDate,Date endDate)
     {
         this.startDate = startDate;
         this.endDate = endDate;
