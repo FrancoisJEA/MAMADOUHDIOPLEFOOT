@@ -1,5 +1,7 @@
 package com.footaddict.superstars.footaddict;
 
+import android.content.Context;
+
 public class Country
 {
     private int countryId;
@@ -23,11 +25,17 @@ public class Country
     public String getScores() { return this.scores; }
     public void setScores(String scores) { this.scores = scores; }
 
-    public Country(int id,String name,String countrycompetitions)
+    public Country(Context context,int id, String name, String countrycompetitions)
     {
         this.countryId = id;
         this.name = name;
         this.countrycompetitions = countrycompetitions;
+
+    }
+
+    public void InsertCountry()
+    {
+
     }
 }
 
