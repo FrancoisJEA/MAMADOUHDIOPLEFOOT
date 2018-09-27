@@ -1,7 +1,7 @@
 create table fa.tMatch
 (
 	MatchId int identity(0,1);
-	score nvarchar not null,
+	Score nvarchar not null,
 	StartDate text,
 	EndDate text, 
 	HomeTeam nvarchar not null,
