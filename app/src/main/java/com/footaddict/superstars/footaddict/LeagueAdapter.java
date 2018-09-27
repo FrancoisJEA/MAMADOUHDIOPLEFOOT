@@ -7,16 +7,15 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
-public class CustomAdapter extends BaseAdapter {
+public class LeagueAdapter extends BaseAdapter {
 
     private Context context;
     private List<League> leagues;
 
-    public CustomAdapter(Context context, List<League> listLeague) {
+    public LeagueAdapter(Context context, List<League> listLeague) {
         this.context = context;
         this.leagues = listLeague;
     }
@@ -44,12 +43,16 @@ public class CustomAdapter extends BaseAdapter {
 
         // get current item to be displayed
         League currentLeague = (League) getItem(position);
-
+        String a = currentLeague.getName();
         // get the TextView for item name and item description
-        TextView textViewItemName = convertView.findViewById(R.id.titre_item);
+        //TextView textViewItemName = convertView.findViewById(R.id.titre_item);
+        ((TextView) convertView.findViewById(R.id.titre_item)).setText(currentLeague.getName());
+        ((TextView) convertView.findViewById(R.id.sous_titre_item)).setText(currentLeague.getCountry_id());
 
         //sets the text for item name
-        textViewItemName.setText(currentLeague.getName());
+        //textViewItemName.setText(currentLeague.getName());
+
+
 
         // returns the view for the current row
         return convertView;
