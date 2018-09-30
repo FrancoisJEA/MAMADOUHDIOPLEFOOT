@@ -43,16 +43,13 @@ public class LeagueAdapter extends BaseAdapter {
 
         // get current item to be displayed
         League currentLeague = (League) getItem(position);
-        String a = currentLeague.getName();
-        // get the TextView for item name and item description
-        //TextView textViewItemName = convertView.findViewById(R.id.titre_item);
-        ((TextView) convertView.findViewById(R.id.titre_item)).setText(currentLeague.getName());
+        String leagueName = currentLeague.getName();
+
+        // get the TextView for item name
+        TextView textViewItemName = convertView.findViewById(R.id.titre_item);
+        textViewItemName.setText(leagueName);
+
         ((TextView) convertView.findViewById(R.id.sous_titre_item)).setText(currentLeague.getCountry_id());
-
-        //sets the text for item name
-        //textViewItemName.setText(currentLeague.getName());
-
-
 
         // returns the view for the current row
         return convertView;

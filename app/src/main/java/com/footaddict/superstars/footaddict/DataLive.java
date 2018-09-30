@@ -3,17 +3,17 @@ package com.footaddict.superstars.footaddict;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DataLeague {
+public class DataLive {
 
-    private LeagueInfos data;
+    private LiveInfos data;
     private String success;
 
-    public LeagueInfos getData ()
+    public LiveInfos getData ()
     {
         return data;
     }
 
-    public void setData (LeagueInfos data)
+    public void setData (LiveInfos data)
     {
         this.data = data;
     }
@@ -27,5 +27,4 @@ public class DataLeague {
     {
         this.success = success;
     }
-
 }
