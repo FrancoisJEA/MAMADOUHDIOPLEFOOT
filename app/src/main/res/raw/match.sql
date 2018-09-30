@@ -1,15 +1,14 @@
-create table fa.tMatch
+create table match
 (
-	MatchId int identity(0,1);
-	Score nvarchar not null,
-	StartDate text,
-	EndDate text, 
-	HomeTeam nvarchar not null,
-	AwayTeam nvarchar not null,
-	LeagueId int,
-	CountryId int,
+	match_id integer PRIMARY KEY,
+	score text NOT NULL,
+	start_date text NOT NULL,
+	end_date text NOT NULL, 
+	home_team text NOT NULL,
+	away_team text NOT NULL,
+	league_id integer,
+    country_id integer,
 
-	constraint PK_tMatch primary key(MatchId)
-	constraint FK_tMatchCountryId foreign key(CountryId) references fa.tCountry(CountryId),
-	constraint FK_tMatchLeagueId foreign key(LeagueId) references fa.tLeague(LeagueId) 
+	FOREIGN KEY(country_id) REFERENCES country(country_id),
+	FOREIGN KEY(league_id) REFERENCES league(league_id)  
 );

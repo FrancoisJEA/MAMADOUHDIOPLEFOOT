@@ -1,11 +1,9 @@
-create table fa.tCountry
+CREATE TABLE country
 (
-	CountryId int identity(0,1),
-	CountryName nvarchar not null,
-	Scores nvarchar not null,
-	CountryCompetitions nvarchar not null, 
-
-	constraint PK_tCountry primary key(CountryId),
-	constraint UK_tCountry UNIQUE key(Name)
-	);
+	country_id integer PRIMARY KEY,
+	country_name text NOT NULL,
+	country_scores_live text NOT NULL UNIQUES,
+    country_scores_old text NOT NULL UNIQUES,
+	country_leagues text NOT NULL UNIQUE 
+);
 
