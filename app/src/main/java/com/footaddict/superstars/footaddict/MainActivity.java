@@ -11,15 +11,18 @@ import android.widget.ListView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
 
@@ -40,7 +43,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        viewLiveWithRequest("http://livescore-api.com/api-client/scores/live.json?key=yEcqTDm6UkJ51IqJ&secret=zVPESkhMLdIJENucrGCljZrekbjmTK5t", "Lives.json");
+        //viewLiveWithRequest("http://livescore-api.com/api-client/scores/live.json?key=yEcqTDm6UkJ51IqJ&secret=zVPESkhMLdIJENucrGCljZrekbjmTK5t", "Lives.json");
+        viewLiveWithCache("Lives.json");
         //playSound(this, R.raw.uefa);
         //connectedToTheNetwork(this);
     }
@@ -144,15 +148,17 @@ public class MainActivity extends AppCompatActivity {
     private String readFromFile(String fileName) {
         try {
             File file = new File(getCacheDir(), fileName);
-            InputStreamReader inputStreamReader = new InputStreamReader(new FileInputStream(file));
             FileInputStream inputStream = new FileInputStream(file);
-            //if (inputStream != null) {
-                int size = inputStream.available();
-                byte[] buffer = new byte[size];
-                int read = inputStream.read(buffer);
-                inputStream.close();
-                return new String(buffer);
-            //}
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+            if (inputStreamReader != null) {
+                BufferedReader reader = new BufferedReader(inputStreamReader);
+                String result = "";
+                for (result = reader.readLine(); result != null; result = reader.readLine()) {
+                    System.out.println(result);
+                }
+                reader.close();
+                return result;
+            }
         } catch (FileNotFoundException e) {
             Log.e("login activity", "File not found: " + e.toString());
         } catch (IOException e) {
@@ -167,9 +173,10 @@ public class MainActivity extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                String Json = readFromFile(fileName);
+                //String Json = readFromFile(fileName);
                 try {
-                    DataLive dataLive = objectMapper.readValue(Json, DataLive.class);
+                    File file = new File(getCacheDir(), fileName);
+                    DataLive dataLive = objectMapper.readValue(file, DataLive.class);
                     Live[] list = dataLive.getData().getMatch();
                     final List<Live> lives = Arrays.asList(list);
                     // instantiate the custom list adapter
