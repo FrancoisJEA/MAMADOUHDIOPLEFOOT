@@ -7,28 +7,26 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
-
-public class CustomAdapter extends BaseAdapter {
+public class LiveAdapter extends BaseAdapter{
 
     private Context context;
-    private List<League> leagues;
+    private List<Live> lives;
 
-    public CustomAdapter(Context context, List<League> listLeague) {
+    public LiveAdapter(Context context, List<Live> live){
         this.context = context;
-        this.leagues = listLeague;
+        this.lives = live;
     }
 
     @Override
     public int getCount() {
-        return leagues.size();
+        return lives.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return leagues.get(position);
+        return lives.get(position);
     }
 
     @Override
@@ -39,17 +37,19 @@ public class CustomAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.league_item, parent, false);
+            convertView = LayoutInflater.from(context).inflate(R.layout.live_item, parent, false);
         }
 
         // get current item to be displayed
-        League currentLeague = (League) getItem(position);
+        Live currentLive = (Live) getItem(position);
+        String homeName = currentLive.getHome_name();
+        String awayName = currentLive.getAway_name();
+        String score = currentLive.getScore();
 
         // get the TextView for item name and item description
-        TextView textViewItemName = convertView.findViewById(R.id.titre_item);
-
-        //sets the text for item name
-        textViewItemName.setText(currentLeague.getName());
+        ((TextView) convertView.findViewById(R.id.home_name)).setText(homeName);
+        ((TextView) convertView.findViewById(R.id.score)).setText(score);
+        ((TextView) convertView.findViewById(R.id.away_name)).setText(awayName);
 
         // returns the view for the current row
         return convertView;

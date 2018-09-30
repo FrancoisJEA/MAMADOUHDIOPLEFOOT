@@ -1,6 +1,9 @@
 package com.footaddict.superstars.footaddict;
 
-public class LiveMatch {
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Live {
 
     private String league_name;
 

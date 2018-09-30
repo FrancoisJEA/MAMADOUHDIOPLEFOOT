@@ -1,5 +1,8 @@
 package com.footaddict.superstars.footaddict;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class League {
     private String id;
 
