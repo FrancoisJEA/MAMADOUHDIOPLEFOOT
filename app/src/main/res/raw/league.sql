@@ -1,11 +1,10 @@
-create table fa.tLeague
+CREATE TABLE league
 (
-	LeagueId int identity(0,1),
-	Name nvarchar not null,
-	CountryId int,
-	LeagueScores nvarchar not null, 
+	league_id integer PRIMARY KEY,
+	league_name text NOT NULL,
+	country_id integer,
+	league_scores_live text NOT NULL,
+	league_scores_old text NOT NULL,
 
-	constraint PK_tLeague primary key(LeagurId),
-	constraint UK_tLeague UNIQUE key(Name),
-	constraint FK_tLeague foreign key(CountryId) references fa.tCountry(CountryId)
+	FOREIGN KEY(country_id) REFERENCES country(country_id) 
 	);
