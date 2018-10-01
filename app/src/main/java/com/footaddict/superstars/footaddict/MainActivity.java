@@ -11,18 +11,16 @@ import android.widget.ListView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -44,8 +42,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //viewLiveWithRequest("http://livescore-api.com/api-client/scores/live.json?key=yEcqTDm6UkJ51IqJ&secret=zVPESkhMLdIJENucrGCljZrekbjmTK5t", "Lives.json");
+        listView = findViewById(R.id.listView);
         viewLiveWithCache("Lives.json");
+        viewLiveWithRequest("http://livescore-api.com/api-client/scores/live.json?key=yEcqTDm6UkJ51IqJ&secret=zVPESkhMLdIJENucrGCljZrekbjmTK5t", "Lives.json");
         //playSound(this, R.raw.uefa);
         //connectedToTheNetwork(this);
         BDDOpenHelper openHelper = new BDDOpenHelper(this);
@@ -62,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
     public void connectedToTheNetwork(Context context){
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-
         if(activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
             runOnUiThread(new Runnable() {
                 @Override
@@ -92,10 +90,24 @@ public class MainActivity extends AppCompatActivity {
         mp.start();
     }
 
+    private DataLive getData(String data) {
+        return getData(new ByteArrayInputStream(data.getBytes()));
+    }
+
+    private DataLive getData(InputStream result){
+        DataLive dataLive = new DataLive();
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            dataLive = objectMapper.readValue(result, DataLive.class);
+        }catch (IOException e ) {
+            e.printStackTrace();
+        }
+        return dataLive;
+    }
+
     //Writing also in cache
     private void viewLiveWithRequest(String url, final String fileName) {
         OkHttpClient client = MyApplication.getClient();
-        final ObjectMapper objectMapper = new ObjectMapper();
         listView = findViewById(R.id.listView);
 
         // Request for get list of all league
@@ -114,36 +126,47 @@ public class MainActivity extends AppCompatActivity {
                 if (!response.isSuccessful()) {
                     throw new IOException("Unexpected code " + response);
                 } else {
-                    // do something wih the result
-                    //String jsonCache = readFromFile(fileName);
-                    //Log.i("JSonInCache",jsonCache);
-                    final String result = response.body().string();
-                    // Setup the data source
-
-                   runOnUiThread(new Runnable() {
-                       @Override
-                       public void run() {
-                           writeToFile(result, fileName);
-                           try {
-                               DataLive dataLive = objectMapper.readValue(result, DataLive.class);
-                               Live[] list = dataLive.getData().getMatch();
-                               final List<Live> lives = Arrays.asList(list);
-                               // instantiate the custom list adapter
-                               liveAdapter = new LiveAdapter(MainActivity.this, lives);
-                               // get the ListView and attach the adapter
-                               listView.setAdapter(liveAdapter);
-                           }
-                           catch (IOException e ) {
-                               e.printStackTrace();
-                           }
-                       }
-                   });
+                    String data = response.body().string();
+                    writeToFile(data, fileName);
+                    DataLive dataLive = getData(data);
+                    setLiveView(dataLive);
                 }
             }
         });
     }
 
-    private void writeToFile(String data, String fileName) {
+    private void viewLiveWithCache(final String fileName) {
+        File file = new File(getCacheDir(), fileName);
+        if (file.exists()) {
+            try {
+                DataLive dataLive = getData(new FileInputStream(file));
+                setLiveView(dataLive);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                Log.e("Login Activity: ", "Error with FileInputStream");
+            }
+        }
+        else {
+            Log.e("Login Activity: ", "File doesn't exist in cache");
+        }
+    }
+
+    private void setLiveView(DataLive dataLive){
+        Live[] list = dataLive.getData().getMatch();
+        final List<Live> lives = Arrays.asList(list);
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                // instantiate the custom list adapter
+                liveAdapter = new LiveAdapter(MainActivity.this, lives);
+                // get the ListView and attach the adapter
+                listView.setAdapter(liveAdapter);
+            }
+        });
+    }
+
+    private void writeToFile(final String data, final String fileName) {
         try {
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(new FileOutputStream(new File(getCacheDir(), fileName)));
             outputStreamWriter.write(data);
@@ -153,51 +176,5 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
             Log.e("Exception", "File write failed: " + e.toString());
         }
-    }
-
-    private String readFromFile(String fileName) {
-        try {
-            File file = new File(getCacheDir(), fileName);
-            FileInputStream inputStream = new FileInputStream(file);
-            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-            if (inputStreamReader != null) {
-                BufferedReader reader = new BufferedReader(inputStreamReader);
-                String result = "";
-                for (result = reader.readLine(); result != null; result = reader.readLine()) {
-                    System.out.println(result);
-                }
-                reader.close();
-                return result;
-            }
-        } catch (FileNotFoundException e) {
-            Log.e("login activity", "File not found: " + e.toString());
-        } catch (IOException e) {
-            Log.e("login activity", "Can not read file: " + e.toString());
-        }
-        return "";
-    }
-
-    private void viewLiveWithCache(final String fileName){
-        final ObjectMapper objectMapper = new ObjectMapper();
-        listView = findViewById(R.id.listView);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                //String Json = readFromFile(fileName);
-                try {
-                    File file = new File(getCacheDir(), fileName);
-                    DataLive dataLive = objectMapper.readValue(file, DataLive.class);
-                    Live[] list = dataLive.getData().getMatch();
-                    final List<Live> lives = Arrays.asList(list);
-                    // instantiate the custom list adapter
-                    liveAdapter = new LiveAdapter(MainActivity.this, lives);
-                    // get the ListView and attach the adapter
-                    listView.setAdapter(liveAdapter);
-                }
-                catch (IOException e ) {
-                    e.printStackTrace();
-                }
-            }
-        });
     }
 }
