@@ -1,7 +1,11 @@
 package com.footaddict.superstars.footaddict;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+
+import com.facebook.stetho.inspector.protocol.module.Database;
 
 import java.sql.Connection;
 
@@ -13,6 +17,7 @@ public class Country
     private String scoresold;
     private boolean is_real;
     private String countryleagues;
+    private Context context;
 
     public int getId() {return this.countryId;}
     public void setId(int id) { this.countryId = id;}
@@ -39,14 +44,30 @@ public class Country
         this.countryleagues = countryleagues;
         this.scoreslive = livescores;
         this.scoresold = oldscores;
+        this.context = context;
     }
 
-    public void InsertCountry(int id,String countryname,String livescores,String oldscores,String countryleague)
+    private ContentValues countryContentValue(int id, String countryname, String livescores, String oldscores, String countryleague)
     {
-        String request = "INSERT INTO country(countryname,scoreslive,scoresold,countryleague)Values  ";
-        try (MyOpenHelper con = new MyOpenHelper())
-        {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("ID",id);
+        contentValues.put("CountryName",countryId);
+        contentValues.put("LivesScores",livescores);
+        contentValues.put("Oldscores",oldscores);
+        contentValues.put("CountryId",countryleague);
+        return  contentValues;
+    }
 
+    public void insertCountry()
+    {
+        SQLiteDatabase db = null;
+        MyOpenHelper con = new MyOpenHelper(context);
+
+        try
+        {
+            db = con.getWritableDatabase();
+            db.beginTransaction();
+            db.insert("country",null,countryContentValue(this.countryId,this.name,this.scoreslive,this.scoresold,this.countryleagues));
         }
         catch (SQLiteException e)
         {
