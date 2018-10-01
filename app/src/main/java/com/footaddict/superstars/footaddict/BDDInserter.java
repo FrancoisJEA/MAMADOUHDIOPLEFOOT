@@ -80,7 +80,6 @@ public class BDDInserter
         SQLiteDatabase db = con.getWritableDatabase();
         try
         {
-            db = con.getWritableDatabase();
             db.insert("match",null,matchContentValue(match));
             db.close();
         }
