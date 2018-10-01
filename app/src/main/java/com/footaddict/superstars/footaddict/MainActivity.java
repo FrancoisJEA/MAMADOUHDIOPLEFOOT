@@ -1,6 +1,7 @@
 package com.footaddict.superstars.footaddict;
 
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -56,8 +57,8 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         listView = findViewById(R.id.listView);
-        viewLiveWithCache("Lives.json");
-        viewLiveWithRequest("http://livescore-api.com/api-client/scores/live.json?key=yEcqTDm6UkJ51IqJ&secret=zVPESkhMLdIJENucrGCljZrekbjmTK5t", "Lives.json");
+        viewLiveWithCache();
+        viewLiveWithRequest();
         //playSound(this, R.raw.uefa);
         //connectedToTheNetwork(this);
 
@@ -72,20 +73,24 @@ public class MainActivity extends AppCompatActivity {
         MenuItem item = menu.findItem(R.id.spinner);
         Spinner spinner = (Spinner) item.getActionView();
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+        final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.spinner_list_item_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setPopupBackgroundDrawable(new ColorDrawable(getColor(R.color.textColorPrimary)));
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-
-                if (arg2 == 1)  {
-                    League league = new League();
-                    List<League> leagues = Arrays.asList(new League(), new League());
-                    listView.setAdapter(new LeagueAdapter(MainActivity.this,leagues));
+                if(arg2 == 0) {
+                    viewLiveWithCache();
+                    viewLiveWithRequest();
                 }
-
+                if (arg2 == 1)  {
+                    /*League league = new League();
+                    List<League> leagues = Arrays.asList(new League(), new League());
+                    listView.setAdapter(new LeagueAdapter(MainActivity.this,leagues));*/
+                    viewLeagueWithRequest();
+                }
             }
 
             @Override
@@ -144,15 +149,25 @@ public class MainActivity extends AppCompatActivity {
         }
         return dataLive;
     }
+    private DataLeague getDataLeague(String result){
+
+        DataLeague dataLeague = new DataLeague();
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            dataLeague = objectMapper.readValue(result, DataLeague.class);
+        }catch (IOException e ) {
+            e.printStackTrace();
+        }
+        return dataLeague;
+    }
 
     //Writing also in cache
-    private void viewLiveWithRequest(String url, final String fileName) {
+    private void viewLiveWithRequest() {
         OkHttpClient client = MyApplication.getClient();
-        listView = findViewById(R.id.listView);
 
         // Request for get list of all league
         Request request = new Request.Builder()
-                .url(url)
+                .url("http://livescore-api.com/api-client/scores/live.json?key=yEcqTDm6UkJ51IqJ&secret=zVPESkhMLdIJENucrGCljZrekbjmTK5t")
                 .build();
 
         //Call http request
@@ -167,16 +182,43 @@ public class MainActivity extends AppCompatActivity {
                     throw new IOException("Unexpected code " + response);
                 } else {
                     String data = response.body().string();
-                    writeToFile(data, fileName);
+                    writeToFile(data, "Lives.json");
                     DataLive dataLive = getData(data);
                     setLiveView(dataLive);
                 }
             }
         });
     }
+    private void viewLeagueWithRequest() {
+        OkHttpClient client = MyApplication.getClient();
 
-    private void viewLiveWithCache(final String fileName) {
-        File file = new File(getCacheDir(), fileName);
+        // Request for get list of all league
+        Request request = new Request.Builder()
+                .url("http://livescore-api.com/api-client/leagues/list.json?key=yEcqTDm6UkJ51IqJ&secret=zVPESkhMLdIJENucrGCljZrekbjmTK5t")
+                .build();
+
+        //Call http request
+        client.newCall(request).enqueue(new Callback() {
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+                Log.e("Exception", "Http connection failed ");
+            }
+
+            public void onResponse(Call call, final Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    throw new IOException("Unexpected code " + response);
+                } else {
+                    String data = response.body().string();
+                    //writeToFile(data, "Leagues.json");
+                    DataLeague dataLeague = getDataLeague(data);
+                    setLeagueView(dataLeague);
+                }
+            }
+        });
+    }
+
+    private void viewLiveWithCache() {
+        File file = new File(getCacheDir(), "Lives.json");
         if (file.exists()) {
             try {
                 DataLive dataLive = getData(new FileInputStream(file));
@@ -202,6 +244,21 @@ public class MainActivity extends AppCompatActivity {
                 liveAdapter = new LiveAdapter(MainActivity.this, lives);
                 // get the ListView and attach the adapter
                 listView.setAdapter(liveAdapter);
+            }
+        });
+    }
+
+    private void setLeagueView(DataLeague dataLeague){
+        League[] list = dataLeague.getData().getLeague();
+        final List<League> leagues = Arrays.asList(list);
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                // instantiate the custom list adapter
+                leagueAdapter = new LeagueAdapter(MainActivity.this, leagues);
+                // get the ListView and attach the adapter
+                listView.setAdapter(leagueAdapter);
             }
         });
     }

@@ -6,7 +6,7 @@
 
     <item
         android:id="@+id/spinner"
-        android:title="actionbar_spinner"
+        android:title="@string/app_name"
         app:actionViewClass="android.widget.Spinner"
         app:showAsAction="always" />
 </menu>
