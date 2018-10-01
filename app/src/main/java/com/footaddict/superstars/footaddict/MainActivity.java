@@ -57,17 +57,6 @@ public class MainActivity extends AppCompatActivity {
         //connectedToTheNetwork(this);
         BDDOpenHelper openHelper = new BDDOpenHelper(this);
         openHelper.getWritableDatabase().close();
-        Country country = new Country(this,13,"Afrique","liguesAfrique","3-3","13-13");
-        Country country2 = new Country(this,12,"Amérique","AmériqueLigues","14-23","1-1");
-        League league = new League(this,16,"Ligue1","3-17","6-12",13);
-        Match match = new Match(this,2011,new Date(2015,10,31,12,13),new Date(2017,13,12,18,15),"2-2","Mancherter City","Lyon",16,13 );
-        BDDInserter insert = new BDDInserter();
-        insert.insertCountry(country);
-        insert.insertCountry(country2);
-        ListCountry list = new ListCountry();
-        list.getCountrys(this);
-        insert.insertLeague(league);
-        insert.insertMatch(match);
     }
 
     @Override
