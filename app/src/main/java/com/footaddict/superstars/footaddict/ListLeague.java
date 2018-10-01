@@ -31,7 +31,7 @@ import java.util.List;
                     String score_live = c.getString(3);
                     String score_old = c.getString(4);
                     int country_id = c.getInt(2);
-                    League league = new League(context, id, name, score_old, score_live, country_id);
+                    League league = new League(id, name, score_old, score_live, country_id);
                     this.league.add(league);
                 }
             } catch (SQLException e) {
