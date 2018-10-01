@@ -11,6 +11,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -42,48 +44,59 @@ public class MainActivity extends AppCompatActivity {
     LeagueAdapter leagueAdapter;
     LiveAdapter liveAdapter;
     boolean isConnected;
+    Toolbar myToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar myToolbar = findViewById(R.id.my_toolbar);
+
+        myToolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+
         listView = findViewById(R.id.listView);
         viewLiveWithCache("Lives.json");
         viewLiveWithRequest("http://livescore-api.com/api-client/scores/live.json?key=yEcqTDm6UkJ51IqJ&secret=zVPESkhMLdIJENucrGCljZrekbjmTK5t", "Lives.json");
         //playSound(this, R.raw.uefa);
         //connectedToTheNetwork(this);
+
         BDDOpenHelper openHelper = new BDDOpenHelper(this);
         openHelper.getWritableDatabase().close();
-        Country country = new Country(this,13,"Afrique","liguesAfrique","3-3","13-13");
-        League league = new League(this,16,"Ligue1","3-17","6-12",13);
-        Match match = new Match(this,2011,new Date(2015,10,31,12,13),new Date(2017,13,12,18,15),"2-2","Mancherter City","Lyon",16,13 );
-        BDDInserter insert = new BDDInserter();
-        insert.insertCountry(country);
-        insert.insertLeague(league);
-        insert.insertMatch(match);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    /*public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.layout.spinner_menu, menu);
+        getMenuInflater().inflate(R.menu.spinner_menu, menu);
 
         MenuItem item = menu.findItem(R.id.spinner);
-        Spinner spinner = (Spinner) MenuItemCompat.getActionView(item);
+        Spinner spinner = (Spinner) item.getActionView();
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.spinner_list_item_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
+            @Override
+            public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+
+                if (arg2 == 1)  {
+                    League league = new League();
+                    List<League> leagues = Arrays.asList(new League(), new League());
+                    listView.setAdapter(new LeagueAdapter(MainActivity.this,leagues));
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+
+            }
+
+        });
         spinner.setAdapter(adapter);
-        return true;
-    }*/
+        return super.onCreateOptionsMenu(menu);
+    }
 
     public void connectedToTheNetwork(Context context){
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(CONNECTIVITY_SERVICE);

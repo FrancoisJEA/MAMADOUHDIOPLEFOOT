@@ -59,9 +59,11 @@ public class League
         this.name = name;
     }
 
-    public Context getContext(){return context;}
+    public League() {
 
-    public League(Context context,int id,String name,String old_score,String live_scores, int country_id)
+    }
+
+    public League(int id,String name,String old_score,String live_scores, int country_id)
     {
         this.context = context; this.id = id; this.name = name;
         this.old_scores = old_score; this.live_scores = live_scores;this.country_id=country_id;

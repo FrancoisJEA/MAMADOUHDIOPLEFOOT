@@ -46,7 +46,7 @@ public class BDDInserter
 
     public void insertLeague(League league)
     {
-        BDDOpenHelper con = new BDDOpenHelper(league.getContext());
+        BDDOpenHelper con = new BDDOpenHelper(null);
         SQLiteDatabase db = con.getWritableDatabase();
         try
         {

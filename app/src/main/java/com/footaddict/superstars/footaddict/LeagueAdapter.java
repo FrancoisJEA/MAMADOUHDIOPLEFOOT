@@ -49,7 +49,7 @@ public class LeagueAdapter extends BaseAdapter {
         TextView textViewItemName = convertView.findViewById(R.id.titre_item);
         textViewItemName.setText(leagueName);
 
-        ((TextView) convertView.findViewById(R.id.sous_titre_item)).setText(currentLeague.getCountry_id());
+        ((TextView) convertView.findViewById(R.id.sous_titre_item)).setText(""+currentLeague.getCountry_id());
 
         // returns the view for the current row
         return convertView;
