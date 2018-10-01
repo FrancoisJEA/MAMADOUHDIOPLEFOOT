@@ -24,6 +24,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import okhttp3.Call;
@@ -47,6 +48,15 @@ public class MainActivity extends AppCompatActivity {
         viewLiveWithCache("Lives.json");
         //playSound(this, R.raw.uefa);
         //connectedToTheNetwork(this);
+        BDDOpenHelper openHelper = new BDDOpenHelper(this);
+        openHelper.getWritableDatabase().close();
+        Country country = new Country(this,13,"Afrique","liguesAfrique","3-3","13-13");
+        League league = new League(this,16,"Ligue1","3-17","6-12",13);
+        Match match = new Match(this,2011,new Date(2015,10,31,12,13),new Date(2017,13,12,18,15),"2-2","Mancherter City","Lyon",16,13 );
+        BDDInserter insert = new BDDInserter();
+        insert.insertCountry(country);
+        insert.insertLeague(league);
+        insert.insertMatch(match);
     }
 
     public void connectedToTheNetwork(Context context){
