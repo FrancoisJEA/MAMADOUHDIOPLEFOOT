@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">FootAddict</string>
+    <string-array name="spinner_list_item_array">
+        <item>Lives</item>
+        <item>Leagues</item>
+        <item>Country</item>
+    </string-array>
 </resources>
