@@ -14,7 +14,7 @@ public class BDDOpenHelper extends SQLiteOpenHelper
 
     public BDDOpenHelper(Context context)
     {
-        super(context,"FootballAddict122",null,1);
+        super(context,"FootballAddict2",null,1);
         this.context = context;
     }
 
