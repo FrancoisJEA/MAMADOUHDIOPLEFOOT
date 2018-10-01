@@ -59,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
         listView = findViewById(R.id.listView);
         viewLiveWithCache();
         viewLiveWithRequest();
-        //playSound(this, R.raw.uefa);
         //connectedToTheNetwork(this);
 
         BDDOpenHelper openHelper = new BDDOpenHelper(this);
@@ -130,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private static void playSound(Context context, int soundID){
+    public static void playSound(Context context, int soundID){
         MediaPlayer mp = MediaPlayer.create(context, soundID);
         mp.start();
     }

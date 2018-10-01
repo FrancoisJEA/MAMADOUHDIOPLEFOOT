@@ -7,11 +7,12 @@ import android.os.Handler;
 
 public class SplashScreen extends Activity{
 
-    private static int SPLASH_TIME_OUT = 3000;
+    private static int SPLASH_TIME_OUT = 8050;
 
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        MainActivity.playSound(this, R.raw.uefa);
 
         new Handler().postDelayed(new Runnable() {
             @Override
