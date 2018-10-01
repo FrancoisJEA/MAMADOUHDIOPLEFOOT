@@ -44,14 +44,7 @@ public class Country
     public void InsertCountry(int id,String countryname,String livescores,String oldscores,String countryleague)
     {
         String request = "INSERT INTO country(countryname,scoreslive,scoresold,countryleague)Values  ";
-        try (MyOpenHelper con = new MyOpenHelper())
-        {
 
-        }
-        catch (SQLiteException e)
-        {
-            System.out.println("Sqlite Error");
-        }
     }
 
 }
